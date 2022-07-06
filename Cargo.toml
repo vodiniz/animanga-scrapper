@@ -1,5 +1,5 @@
 [package]
-name = "animanga-scrapper"
+name = "animanga_scrapper"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,3 +9,6 @@ edition = "2021"
 
 reqwest = {version = "0.11", features = ["blocking"]}
 scraper = "0.12.0"
+headless_chrome = "0.9.0"
+failure = "0.1.8"
+rusqlite = { version = "0.27.0", features = ["bundled"] }
