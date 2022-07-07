@@ -5,7 +5,8 @@ use std::iter::zip;
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
-pub struct Mangaplus_reference {
+#[derive(Debug)]
+pub struct MangaplusReference {
     pub manga_chapter: u16,
     pub manga_id: u32,
 }
@@ -52,10 +53,8 @@ impl Manga {
         }
     }
 
-    fn browse_mangaplus(&self) -> Result<Vec<Mangaplus_reference>, failure::Error> {
-        let mut mangaplus_reference_vector: Vec<Mangaplus_reference> = Vec::new();
-        let mut chapter_vec: Vec<String> = Vec::new();
-        let mut link_vec: Vec<String> = Vec::new();
+    fn browse_mangaplus(&self) -> Result<Vec<MangaplusReference>, failure::Error> {
+        let mut MangaplusReference_vector: Vec<MangaplusReference> = Vec::new();
 
         let browser = Browser::default()?;
         let tab = browser.wait_for_initial_tab()?;
@@ -81,15 +80,17 @@ impl Manga {
 
             for content_children in content.get_description()?.children {
                 for element in content_children {
-                    chapter = element.node_value.parse().unwrap_or(0);
+                    chapter = element.node_value.
+                        replace("#","")
+                        .parse().unwrap_or(0);
                 }
             }
-            mangaplus_reference_vector.push(Mangaplus_reference {
+            MangaplusReference_vector.push(MangaplusReference {
                 manga_chapter: chapter,
                 manga_id: id,
             })
         }
-        Ok(mangaplus_reference_vector)
+        Ok(MangaplusReference_vector)
     }
 
     pub fn get_last_manga(&self) -> String {
@@ -119,7 +120,7 @@ impl Manga {
         }
     }
 
-    fn scrap_manga(&mut self) {
+    pub fn scrap_manga(&mut self) {
         let client = reqwest::blocking::Client::builder()
             .user_agent(APP_USER_AGENT)
             .build()
