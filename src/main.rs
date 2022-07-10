@@ -1,8 +1,11 @@
+use std::error::Error;
+
 // use failure;
 // use headless_chrome::Browser;
 // use scraper;
 // use std::iter::zip;
 use animanga_scrapper;
+use rusqlite::Connection;
 
 // Name your user agent for browser
 
@@ -84,7 +87,7 @@ fn build_manga_list() -> Vec<animanga_scrapper::Manga> {
 }
 
 //scrap all elements of the list
-fn scrap_all(scrap_list: &mut Vec<animanga_scrapper::Manga>) {
+fn scrap_all(scrap_list: &Vec<animanga_scrapper::Manga>) {
     for element in scrap_list {
         element.scrap_manga();
     }
@@ -96,29 +99,20 @@ fn scrap_all(scrap_list: &mut Vec<animanga_scrapper::Manga>) {
 //     }
 // }
 
-fn main() {
+fn run() {
     println!("Welcome to the manga scrapper");
     println!("--------------------------------");
-    let mut manga_list = build_manga_list();
+    let manga_list = build_manga_list();
     //add_chapter_to_all(&mut manga_list);
 
-    scrap_all(&mut manga_list);
-    mangaplus_last_manga_link();
+    scrap_all(&manga_list);
 }
 
-    //print variable type
-    // fn print_type_of<T>(_: &T) {
-    //     println!("{}", std::any::type_name::<T>())
+fn main() {
+    
 
-
-fn mangaplus_last_manga_link() {
-    let tmp = animanga_scrapper::Manga {
-        title: String::from("One Piece"),
-        base_scrap_link: String::from("https://mangaplus.shueisha.co.jp/titles/100020"),
-        current_chapter: 1053,
-        last_chapter: 1053,
-        animelist_id: Some(13),
-        manga_site: animanga_scrapper::Mangasite::Mangaplus,
-    };
-    dbg!(tmp.get_last_manga());
 }
+
+//print variable type
+// fn print_type_of<T>(_: &T) {
+//     println!("{}", std::any::type_name::<T>())
